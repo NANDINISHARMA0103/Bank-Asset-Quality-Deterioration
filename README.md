@@ -12,7 +12,7 @@ across 47 Indian public- and private-sector commercial banks (2005–2025).
 **File:** `Rplot.png`
 **Code:** `hist(df$gnpa_ratio, main = "Distribution of GNPA Ratio", ...)`
 
-![Distribution of GNPA Ratio](Output/Rplot.png)
+![Distribution of GNPA Ratio](Output/Rplot01.png)
 
 Shows the frequency distribution of GNPA ratio across all bank-year
 observations.
@@ -27,7 +27,7 @@ small number of severely stressed banks pull the average upward.
 **File:** `Rplot01.png`
 **Code:** `boxplot(df$credit_growth ~ df$category, ...)`
 
-![Credit Growth by Bank Category](Output/Rplot01.png)
+![Credit Growth by Bank Category](Output/Rplot02.png)
 
 Compares the spread of credit growth between Public and Private sector banks.
 
@@ -41,7 +41,7 @@ around ~90%).
 **File:** `Rplot02.png`
 **Code:** `barplot(avg_roa$return_on_assets, names.arg = avg_roa$category, ...)`
 
-![Average ROA by Bank Category](Output/Rplot02.png)
+![Average ROA by Bank Category](Output/Rplot03.png)
 
 Compares average Return on Assets between the two ownership categories.
 
@@ -56,7 +56,7 @@ Public sector banks, plausibly linked to Public banks' higher NPA burden.
 **File:** `correlation_plot.png`
 **Code:** `ggcorrplot(r, type = "lower", lab = TRUE, ...)`
 
-![Correlation: Bank Health & Macro Variables](Output/correlation_plot.png)
+![Correlation: Bank Health & Macro Variables](Output/correlationplot.png)
 
 A lower-triangle heatmap showing pairwise correlations between GNPA Ratio,
 Credit Growth, ROA, CAR, Net Interest Income, Repo Rate, and Real GDP Growth.
@@ -72,7 +72,7 @@ deterioration is driven more by bank-level factors than the broader economy.
 **File:** `Rplot03.png`
 **Code:** `geom_density(alpha = 0.9, color = NA) + facet_wrap(~ gnpa_tier, scales = "free_y")`
 
-![Credit Growth Distribution by GNPA Risk Tier](Output/Rplot03.png)
+![Credit Growth Distribution by GNPA Risk Tier](Output/Rplot05.png)
 
 Four density curves (Low / Moderate / High / Severe GNPA risk) showing how
 credit growth is distributed within each risk tier.
@@ -120,7 +120,7 @@ individual banks' GNPA rises.
 **File:** `Rplot04.png`
 **Code:** `qqnorm(df$delta_gnpa_ratio); qqline(...)`
 
-![Normal Q-Q Plot](Output/Rplot04.png)
+![Normal Q-Q Plot](Output/Rplot.png)
 
 Tests whether year-on-year GNPA change follows a normal distribution.
 
@@ -134,8 +134,10 @@ rest of the analysis.
 ## Predictive Model Plots
 
 ### 9. Decision Tree — Predicting GNPA Deterioration
-**File:** *not yet exported*
+**File:** 'Rrplot08.png'
 **Code:** `rpart.plot(tree_model, main = "Decision Tree — Predicting GNPA Deterioration", extra = 104, box.palette = "GnBu")`
+
+![Decision Tree — Predicting GNPA Deterioration](Output/Rplot08.png)
 
 This plot only renders in the RStudio Plots pane — it was never saved to a
 file. To fix: after running the `rpart.plot(...)` line, click **Export →
@@ -158,7 +160,7 @@ specificity 95.5%.
 **File:** `Rplot05.png`
 **Code:** `roc_log <- roc(test_data$deterioration_flag, log_probs); plot(roc_log, main = "ROC Curve — Logistic Regression", col = "maroon")`
 
-![ROC Curve — Logistic Regression](Output/Rplot05.png)
+![ROC Curve — Logistic Regression](Output/Rplot07.png)
 
 Plots the trade-off between sensitivity and specificity for the logistic
 regression model across all classification thresholds.
@@ -170,25 +172,11 @@ from non-deteriorating banks.
 
 ---
 
-### 11. ROC Curve Comparison — Logistic Regression vs Random Forest
+### 11. Random Forest — Variable Importance Plot
 **File:** `Rplot06.png`
 **Code:** `plot(roc_log, col = "#457B9D", main = "ROC Curve Comparison — Logistic vs Random Forest"); lines(roc_rf, col = "#9E2A2B")`
 
-![ROC Curve Comparison](Output/Rplot06.png)
-
-Overlays both models' ROC curves on one chart for direct visual comparison.
-
-**Key finding:** The Random Forest curve (red) sits consistently above the
-Logistic Regression curve (blue) across most of the specificity range,
-confirming Random Forest's higher AUC (0.813 vs 0.765) — it captures
-predictive relationships, likely non-linear ones, that the logistic model
-misses.
-
----
-
-### 12. Random Forest — Variable Importance Plot
-**File:** *not yet exported*
-**Code:** `varImpPlot(rf_model, main = "Random Forest — Variable Importance")`
+![Distribution of GNPA Ratio](Output/Rplot06.png)
 
 Same issue as the Decision Tree plot above — it renders but was never saved.
 Run the `varImpPlot(...)` line, export as `Rplot08.png`, and add it here.
