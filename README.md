@@ -9,8 +9,10 @@ across 47 Indian public- and private-sector commercial banks (2005–2025).
 ## Basic Graphs
 
 ### 1. Histogram — Distribution of GNPA Ratio
-**File:** `Rplot03.png` (or similar)
-**Code:** `hist(df$gnpa_ratio, ...)`
+**File:** `Rplot.png`
+**Code:** `hist(df$gnpa_ratio, main = "Distribution of GNPA Ratio", ...)`
+
+![Distribution of GNPA Ratio](Rplot.png)
 
 Shows the frequency distribution of GNPA ratio across all bank-year
 observations.
@@ -22,8 +24,10 @@ small number of severely stressed banks pull the average upward.
 ---
 
 ### 2. Boxplot — Credit Growth by Bank Category
-**File:** `Rplot04.png` (or similar)
+**File:** `Rplot01.png`
 **Code:** `boxplot(df$credit_growth ~ df$category, ...)`
+
+![Credit Growth by Bank Category](Rplot01.png)
 
 Compares the spread of credit growth between Public and Private sector banks.
 
@@ -34,8 +38,10 @@ around ~90%).
 ---
 
 ### 3. Barplot — Average ROA by Bank Category
-**File:** `Rplot05.png` (or similar)
-**Code:** `barplot(avg_roa$return_on_assets, ...)`
+**File:** `Rplot02.png`
+**Code:** `barplot(avg_roa$return_on_assets, names.arg = avg_roa$category, ...)`
+
+![Average ROA by Bank Category](Rplot02.png)
 
 Compares average Return on Assets between the two ownership categories.
 
@@ -47,8 +53,10 @@ Public sector banks, plausibly linked to Public banks' higher NPA burden.
 ## Advanced Graphs
 
 ### 4. Correlation Plot — Bank Health & Macro Variables
-**File:** `Screenshot_2026-09-24_at_11_32_27_PM.png`
-**Code:** `ggcorrplot(r, ...)`
+**File:** `correlation_plot.png`
+**Code:** `ggcorrplot(r, type = "lower", lab = TRUE, ...)`
+
+![Correlation: Bank Health & Macro Variables](correlation_plot.png)
 
 A lower-triangle heatmap showing pairwise correlations between GNPA Ratio,
 Credit Growth, ROA, CAR, Net Interest Income, Repo Rate, and Real GDP Growth.
@@ -61,8 +69,10 @@ deterioration is driven more by bank-level factors than the broader economy.
 ---
 
 ### 5. Faceted Density Plot — Credit Growth by GNPA Risk Tier
-**File:** `density_faceted_teal_seagreen.png`
-**Code:** `geom_density(...) + facet_wrap(~ gnpa_tier, ...)`
+**File:** `Rplot03.png`
+**Code:** `geom_density(alpha = 0.9, color = NA) + facet_wrap(~ gnpa_tier, scales = "free_y")`
+
+![Credit Growth Distribution by GNPA Risk Tier](Rplot03.png)
 
 Four density curves (Low / Moderate / High / Severe GNPA risk) showing how
 credit growth is distributed within each risk tier.
@@ -77,6 +87,8 @@ credit growth among the most NPA-stressed banks.
 **File:** `gnpa_trend_by_category.gif`
 **Code:** `geom_line() + geom_point() + transition_reveal(year) + shadow_mark(...)`
 
+![GNPA Trend by Category](gnpa_trend_by_category.gif)
+
 An animated trend line showing average GNPA ratio for Public vs Private
 sector banks, drawn progressively year by year with a fading trail.
 
@@ -87,8 +99,10 @@ Private banks peak at ~8.5% (2020). Both recover to ~2.5–3% by 2025.
 ---
 
 ### 7. Animated Faceted Scatter — Credit Growth vs GNPA by Category
-**File:** `animated_facet_scatter.gif`
+**File:** `animated_facet_scatter_bordered.gif`
 **Code:** `geom_point() + facet_wrap(~ category) + transition_time(year)`
+
+![Credit Growth vs GNPA Ratio by Category](animated_facet_scatter_bordered.gif)
 
 Two side-by-side animated panels (Public / Private) plotting Credit Growth
 against GNPA Ratio, evolving year by year.
@@ -103,8 +117,10 @@ individual banks' GNPA rises.
 ## Statistical Diagnostic Plots
 
 ### 8. Normal Q-Q Plot — delta_gnpa_ratio
-**File:** `Rplot02.png` (or similar)
+**File:** `Rplot04.png`
 **Code:** `qqnorm(df$delta_gnpa_ratio); qqline(...)`
+
+![Normal Q-Q Plot](Rplot04.png)
 
 Tests whether year-on-year GNPA change follows a normal distribution.
 
@@ -118,8 +134,12 @@ rest of the analysis.
 ## Predictive Model Plots
 
 ### 9. Decision Tree — Predicting GNPA Deterioration
-**File:** `Rplot07.png`
-**Code:** `rpart(...) + rpart.plot(...)`
+**File:** *not yet exported*
+**Code:** `rpart.plot(tree_model, main = "Decision Tree — Predicting GNPA Deterioration", extra = 104, box.palette = "GnBu")`
+
+This plot only renders in the RStudio Plots pane — it was never saved to a
+file. To fix: after running the `rpart.plot(...)` line, click **Export →
+Save as Image** in the Plots pane, save as `Rplot07.png`, then add it here.
 
 A classification tree predicting whether a bank will experience GNPA
 deterioration, using Capital Adequacy Ratio, Credit Growth, Repo Rate, Real
@@ -129,14 +149,16 @@ GDP Growth, and ROA.
 Ratio ≥ 13** — banks above this threshold have only a 19% deterioration
 rate (58% of the sample), while banks below it fork further on Credit
 Growth and Repo Rate, reaching deterioration rates as high as 89% in the
-highest-risk leaf (repo rate ≥ 7.6, further split by repo rate < 6.6).
-Overall test accuracy: 79.6%, sensitivity 42.1%, specificity 95.5%.
+highest-risk leaf. Overall test accuracy: 79.6%, sensitivity 42.1%,
+specificity 95.5%.
 
 ---
 
 ### 10. ROC Curve — Logistic Regression
-**File:** `Rplot08.png`
-**Code:** `roc(test_data$deterioration_flag, log_probs); plot(roc_log, ...)`
+**File:** `Rplot05.png`
+**Code:** `roc_log <- roc(test_data$deterioration_flag, log_probs); plot(roc_log, main = "ROC Curve — Logistic Regression", col = "maroon")`
+
+![ROC Curve — Logistic Regression](Rplot05.png)
 
 Plots the trade-off between sensitivity and specificity for the logistic
 regression model across all classification thresholds.
@@ -150,7 +172,9 @@ from non-deteriorating banks.
 
 ### 11. ROC Curve Comparison — Logistic Regression vs Random Forest
 **File:** `Rplot06.png`
-**Code:** `plot(roc_log, ...); lines(roc_rf, ...)`
+**Code:** `plot(roc_log, col = "#457B9D", main = "ROC Curve Comparison — Logistic vs Random Forest"); lines(roc_rf, col = "#9E2A2B")`
+
+![ROC Curve Comparison](Rplot06.png)
 
 Overlays both models' ROC curves on one chart for direct visual comparison.
 
@@ -163,8 +187,11 @@ misses.
 ---
 
 ### 12. Random Forest — Variable Importance Plot
-**File:** *(generate via `varImpPlot(rf_model, ...)`)*
+**File:** *not yet exported*
 **Code:** `varImpPlot(rf_model, main = "Random Forest — Variable Importance")`
+
+Same issue as the Decision Tree plot above — it renders but was never saved.
+Run the `varImpPlot(...)` line, export as `Rplot08.png`, and add it here.
 
 Ranks predictors by their contribution to the Random Forest's predictive
 accuracy (Mean Decrease in Accuracy / Gini).
@@ -199,5 +226,9 @@ power.
   (e.g., knitted R Markdown with `output: html_document`) or a GIF-compatible
   viewer. They will **not** animate in a printed PDF or Word document — use a
   key static frame instead if submitting in those formats.
-- All plots use a consistent color scheme across the project (purple/teal/
-  sea-green family) to maintain visual coherence throughout the analysis.
+- Colors are **deliberately distinct per graph** (not one repeated palette) —
+  purple histogram, lavender boxplot, dark plum barplot, viridis-family
+  facet density, green correlation heatmap, maroon single ROC, blue/red ROC
+  comparison, and separate palettes for each animated chart.
+- Two plots (Decision Tree, Random Forest Variable Importance) still need to
+  be exported from RStudio's Plots pane before this README is complete.
